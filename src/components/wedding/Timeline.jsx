@@ -21,12 +21,12 @@ export default function Timeline() {
     >
       <FloralCornerAccents />
       <div className="max-w-3xl mx-auto relative z-10">
-        <SectionHeader scriptTitle="Timeline" uppercase="Order of Events" />
+        <SectionHeader scriptTitle="Timeline" uppercase="Order of Events" data-aos="fade-down" />
 
         <div className="relative pl-7 sm:pl-10 space-y-8 sm:space-y-10"
           style={{ borderLeft: '2px solid rgba(200,168,75,0.30)' }}>
           {events.map((ev, i) => (
-            <div key={i} className="relative group">
+            <div key={i} className="relative group" data-aos="fade-left" data-aos-delay={i * 80}>
 
               {/* Node */}
               <div

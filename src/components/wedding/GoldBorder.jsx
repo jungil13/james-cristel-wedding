@@ -2,13 +2,14 @@ import React from 'react';
 
 // Reusable elegant gold corner ornament SVG border wrapper
 // Matches the reference image: inner double-line frame with ornate corner flourishes
-export function GoldBorderFrame({ children, className = '', innerPad = true }) {
+export function GoldBorderFrame({ children, className = '', innerPad = true, ...props }) {
   return (
     <div className={`relative ${className}`}
       style={{
         border: '1.5px solid #C8A84B',
         boxShadow: '0 0 0 5px rgba(200,168,75,0.10), 0 0 0 9px rgba(200,168,75,0.04), 0 20px 50px -15px rgba(61,43,26,0.14)',
       }}
+      {...props}
     >
       {/* Inner hairline */}
       <div className="absolute inset-[7px] pointer-events-none"
@@ -84,9 +85,9 @@ export function FloralSideAccents() {
 }
 
 // Section header with script title + uppercase subtitle
-export function SectionHeader({ scriptTitle, uppercase, noMarginBottom }) {
+export function SectionHeader({ scriptTitle, uppercase, noMarginBottom, ...props }) {
   return (
-    <div className={`text-center ${noMarginBottom ? '' : 'mb-12 sm:mb-16'}`}>
+    <div className={`text-center ${noMarginBottom ? '' : 'mb-12 sm:mb-16'}`} {...props}>
       {scriptTitle && (
         <p className="font-script text-5xl sm:text-6xl text-gold font-normal leading-tight"
           style={{ textShadow: '0 1px 10px rgba(200,168,75,0.22)' }}>

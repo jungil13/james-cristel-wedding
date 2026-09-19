@@ -32,12 +32,12 @@ export default function WeddingDetails() {
     >
       <FloralCornerAccents />
       <div className="max-w-4xl mx-auto relative z-10">
-        <SectionHeader scriptTitle="Details" uppercase="Where & When" />
+        <SectionHeader scriptTitle="Details" uppercase="Where & When" data-aos="fade-down" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
 
           {/* Date & Time Card */}
-          <GoldBorderFrame className="rounded-2xl" innerPad={false}>
+          <GoldBorderFrame className="rounded-2xl" innerPad={false} data-aos="flip-left" data-aos-delay="100">
             <div className="p-6 sm:p-8 flex flex-col justify-between h-full">
               <div>
                 <div className="w-12 h-12 rounded-full flex items-center justify-center mb-5"
@@ -69,7 +69,7 @@ export default function WeddingDetails() {
           </GoldBorderFrame>
 
           {/* Venue Card */}
-          <GoldBorderFrame className="rounded-2xl" innerPad={false}>
+          <GoldBorderFrame className="rounded-2xl" innerPad={false} data-aos="flip-right" data-aos-delay="200">
             <div className="p-6 sm:p-8 flex flex-col justify-between h-full">
               <div>
                 <div className="w-12 h-12 rounded-full flex items-center justify-center mb-5"
@@ -103,7 +103,7 @@ export default function WeddingDetails() {
         </div>
 
         {/* Venue note */}
-        <GoldBorderFrame className="rounded-2xl" innerPad={false}>
+        <GoldBorderFrame className="rounded-2xl" innerPad={false} data-aos="fade-up" data-aos-delay="300">
           <div className="p-6 sm:p-8 text-center">
             <h4 className="text-sm font-medium tracking-widest uppercase font-poppins mb-1" style={{ color: '#3D2B1A' }}>
               Chateau By The Sea — Punta Engaño

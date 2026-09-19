@@ -81,7 +81,7 @@ export default function Hero({ onRsvpClick, onDetailsClick }) {
       <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
 
         {/* Monogram */}
-        <div className="mb-5 relative">
+        <div className="mb-5 relative" data-aos="zoom-in" data-aos-duration="900">
           <div
             className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center"
             style={{
@@ -100,10 +100,12 @@ export default function Hero({ onRsvpClick, onDetailsClick }) {
 
         {/* Calligraphy label */}
         <p className="font-script text-2xl sm:text-3xl text-gold font-normal mb-1"
-          style={{ textShadow: '0 1px 8px rgba(200,168,75,0.25)' }}>
+          style={{ textShadow: '0 1px 8px rgba(200,168,75,0.25)' }}
+          data-aos="fade-down" data-aos-delay="100">
           Save the Date
         </p>
-        <p className="text-[10px] sm:text-xs uppercase tracking-[0.38em] text-weddingBrown/70 font-medium mb-3">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.38em] text-weddingBrown/70 font-medium mb-3"
+          data-aos="fade-down" data-aos-delay="150">
           Together with their families
         </p>
 
@@ -111,6 +113,7 @@ export default function Hero({ onRsvpClick, onDetailsClick }) {
         <h1
           className="text-4xl sm:text-6xl md:text-7xl font-light tracking-[0.16em] uppercase mb-2"
           style={{ color: '#3D2B1A' }}
+          data-aos="fade-up" data-aos-delay="200"
         >
           James
           <span className="font-script lowercase text-4xl sm:text-6xl text-gold font-normal sm:mx-3 my-1 sm:my-0 inline-block"
@@ -122,7 +125,8 @@ export default function Hero({ onRsvpClick, onDetailsClick }) {
 
         {/* Intro text */}
         <p className="text-xs sm:text-sm font-light max-w-lg mx-auto leading-relaxed mb-8"
-          style={{ color: '#6B5840' }}>
+          style={{ color: '#6B5840' }}
+          data-aos="fade-up" data-aos-delay="250">
           Request the honour of your presence at the celebration of their holy matrimony and sacred union.
         </p>
 
@@ -130,7 +134,8 @@ export default function Hero({ onRsvpClick, onDetailsClick }) {
         <GoldDivider diamond />
 
         {/* Date & Venue badges */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-5 mb-8 w-full">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-5 mb-8 w-full"
+          data-aos="fade-up" data-aos-delay="300">
           {[
             { Icon: Calendar, text: 'Thursday, January 28, 2027' },
             { Icon: MapPin,   text: 'Chateau By The Sea, Cebu' },
@@ -153,7 +158,7 @@ export default function Hero({ onRsvpClick, onDetailsClick }) {
         </div>
 
         {/* CTA buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-4" data-aos="zoom-in" data-aos-delay="400">
           <button
             onClick={onRsvpClick}
             className="px-8 py-3.5 rounded-full font-medium text-xs sm:text-sm tracking-[0.22em] uppercase transition-all duration-300 hover:scale-105"

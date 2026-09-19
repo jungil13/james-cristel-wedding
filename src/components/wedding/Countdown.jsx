@@ -34,6 +34,7 @@ export default function Countdown() {
     <section className="py-12 px-4 sm:px-6" style={{ background: 'linear-gradient(170deg,#F5EBDA,#FAF6EF)' }}>
       <div className="max-w-3xl mx-auto text-center">
         <div
+          data-aos="fade-down"
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase font-poppins mb-6"
           style={{ background: 'rgba(200,168,75,0.12)', border: '1px solid rgba(200,168,75,0.4)', color: '#3D2B1A' }}
         >
@@ -51,9 +52,11 @@ export default function Countdown() {
           </GoldBorderFrame>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5 max-w-2xl mx-auto">
-            {boxes.map((b) => (
+            {boxes.map((b, i) => (
               <div
                 key={b.label}
+                data-aos="zoom-in-up"
+                data-aos-delay={i * 80}
                 className="rounded-2xl p-5 sm:p-7 text-center transition-transform duration-300 hover:-translate-y-1"
                 style={{
                   background: 'linear-gradient(170deg, #FFFDF6, #FAF1DC)',

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import WeddingEnvelope from './components/wedding/WeddingEnvelope';
 import Hero from './components/wedding/Hero';
 import Countdown from './components/wedding/Countdown';
@@ -14,6 +16,16 @@ import AdminDashboard from './components/admin/AdminDashboard';
 import { supabase } from './lib/supabase';
 
 export default function App() {
+  // Initialize AOS
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out-cubic',
+      once: false,
+      mirror: true,
+      offset: 60,
+    });
+  }, []);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
   const [currentRoute, setCurrentRoute] = useState(window.location.pathname || '/');
   const [adminSession, setAdminSession] = useState(null);

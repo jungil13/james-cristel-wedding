@@ -66,7 +66,7 @@ export default function Entourage() {
       <FloralCornerAccents />
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <SectionHeader scriptTitle="Entourage" uppercase="Those Who Stand With Us" />
+        <SectionHeader scriptTitle="Entourage" uppercase="Those Who Stand With Us" data-aos="fade-down" />
 
         {/* ── PARENTS ── */}
         <div className="mb-12">
@@ -82,7 +82,8 @@ export default function Entourage() {
               { label: 'Parents of the Groom', names: ['Terry Haigler', '&', 'Debra Hanson'] },
               { label: 'Parents of the Bride',  names: ['Paulito', '&', 'Nila'] },
             ].map(({ label, names }) => (
-              <GoldBorderFrame key={label} className="rounded-2xl text-center" innerPad={false}>
+              <GoldBorderFrame key={label} className="rounded-2xl text-center" innerPad={false}
+                data-aos="fade-right" data-aos-delay={100}>
                 <div className="p-6 sm:p-8">
                   <p
                     className="text-[9px] tracking-[0.28em] uppercase font-medium font-poppins mb-3"
@@ -107,7 +108,7 @@ export default function Entourage() {
 
         {/* ── PRINCIPAL SPONSORS ── */}
         <div className="mb-12">
-          <GoldBorderFrame className="rounded-2xl" innerPad={false}>
+          <GoldBorderFrame className="rounded-2xl" innerPad={false} data-aos="zoom-in" data-aos-delay="100">
             <div className="p-6 sm:p-10 text-center">
               <div
                 className="w-10 h-10 rounded-full mx-auto flex items-center justify-center mb-4"
@@ -155,7 +156,7 @@ export default function Entourage() {
             The Bridal Party
           </p>
 
-          <GoldBorderFrame className="rounded-2xl" innerPad={false}>
+          <GoldBorderFrame className="rounded-2xl" innerPad={false} data-aos="fade-up" data-aos-delay="150">
             <div className="p-6 sm:p-10">
 
               {/* Groomsmen + Bridesmaids side by side */}
