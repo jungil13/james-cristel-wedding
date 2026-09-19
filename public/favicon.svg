@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Envelope background / body -->
+  <rect x="6" y="14" width="52" height="38" rx="4" fill="#FAF5EB" stroke="#C8A84B" stroke-width="2.5"/>
+  
+  <!-- Inner letter peek -->
+  <path d="M12 18 L52 18" stroke="#E6D3A3" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Back fold lines -->
+  <path d="M6 50 L26 33" stroke="#D4BC78" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M58 50 L38 33" stroke="#D4BC78" stroke-width="1.8" stroke-linecap="round"/>
+  
+  <!-- Top Flap triangular fold -->
+  <path d="M6 15 L32 35 L58 15" fill="#F4E9D4" stroke="#C8A84B" stroke-width="2.5" stroke-linejoin="round"/>
+  
+  <!-- Gold Wax Seal in center -->
+  <circle cx="32" cy="35" r="7.5" fill="#C8A84B" stroke="#8F6E20" stroke-width="1"/>
+  <circle cx="32" cy="35" r="5.5" fill="#DFBE5E"/>
+  
+  <!-- Tiny heart on wax seal -->
+  <path d="M32 37.5 L29.7 35.2 C28.7 34.2 28.7 32.7 29.9 32.7 C30.7 32.7 31.5 33.4 32 33.9 C32.5 33.4 33.3 32.7 34.1 32.7 C35.3 32.7 35.3 34.2 34.3 35.2 Z" fill="#6E5014"/>
+</svg>
