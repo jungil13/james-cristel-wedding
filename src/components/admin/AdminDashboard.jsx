@@ -245,51 +245,6 @@ export default function AdminDashboard({ onLogout, onReturnHome }) {
             </button>
           </div>
 
-          {/* RLS Permission Warning Banner (Appears when Supabase returns 0 records or local fallback is active) */}
-          {(supabaseEmptyDetected || usingLocalFallback) && (
-            <div className="rounded-2xl p-4 sm:p-5 bg-amber-50/90 border border-amber-300 shadow-sm space-y-3 animate-fadeIn">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-amber-900">
-                    {usingLocalFallback 
-                      ? 'Displaying Locally Saved Submissions (Supabase RLS Active)'
-                      : 'RSVPs Submitted in Form But Not Showing Here?'}
-                  </h4>
-                  <p className="text-xs text-amber-800 font-light mt-1 leading-relaxed">
-                    {usingLocalFallback
-                      ? 'You are viewing submissions cached on this device. Supabase is currently blocking direct queries because Row-Level Security (RLS) is active on the rsvps table.'
-                      : 'Your Supabase database table has Row-Level Security (RLS) enabled, which prevents anonymous/admin SELECT queries without a policy. Run this quick 1-line command in your Supabase SQL Editor to make all RSVPs display immediately:'}
-                  </p>
-
-                  <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <code className="px-3 py-1.5 rounded-lg bg-amber-100/90 border border-amber-300 text-[11px] font-mono text-amber-950 font-medium select-all">
-                      ALTER TABLE public.rsvps DISABLE ROW LEVEL SECURITY;
-                    </code>
-                    <button
-                      onClick={handleCopySql}
-                      className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium tracking-wider transition-colors inline-flex items-center gap-1.5 shadow-sm"
-                    >
-                      {copiedSql ? <CheckCheck className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                      <span>{copiedSql ? 'Copied!' : 'Copy SQL'}</span>
-                    </button>
-                    <a
-                      href="https://supabase.com/dashboard/project/gvrzcexgwppnfqirpiju/sql/new"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-white hover:bg-amber-100/60 border border-amber-300 text-amber-900 text-xs font-medium tracking-wider transition-colors inline-flex items-center gap-1.5"
-                    >
-                      <span>Open Supabase SQL Editor</span>
-                      <ExternalLink className="w-3 h-3 text-amber-700" />
-                    </a>
-                  </div>
-                  <p className="text-[11px] text-amber-700 mt-2 italic">
-                    Tip: After clicking "Run" in Supabase, click the refresh button (top right) and your RSVPs will appear instantly.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Tab 1: Dashboard Overview */}
           {activeTab === 'dashboard' && (
