@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Heart, CheckCircle2, AlertCircle, Loader2, Send } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { GoldBorderFrame, GoldDivider, FloralCornerAccents, SectionHeader } from './GoldBorder';
+
+const RSVP_LIMIT = 100;
 
 export default function RSVPForm() {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     phone: '',
-    guestCount: 1,
     attendance: 'accepted', // 'accepted' | 'declined'
-    dietaryRestrictions: '',
     message: '',
   });
 
@@ -19,6 +19,32 @@ export default function RSVPForm() {
   const [errorMsg, setErrorMsg] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submittedAttendance, setSubmittedAttendance] = useState('accepted');
+
+  // Capacity tracking
+  const [capacityLoading, setCapacityLoading] = useState(true);
+  const [isFull, setIsFull] = useState(false);
+
+  // Fetch total confirmed guest count on mount
+  useEffect(() => {
+    const checkCapacity = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('rsvps')
+          .select('guest_count')
+          .eq('attendance', 'accepted');
+
+        if (!error && data) {
+          const total = data.reduce((sum, r) => sum + (parseInt(r.guest_count, 10) || 0), 0);
+          if (total >= RSVP_LIMIT) setIsFull(true);
+        }
+      } catch (_) {
+        // silently fail — form stays open if check cannot complete
+      } finally {
+        setCapacityLoading(false);
+      }
+    };
+    checkCapacity();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,11 +66,6 @@ export default function RSVPForm() {
       return false;
     }
 
-    const count = parseInt(formData.guestCount, 10);
-    if (isNaN(count) || count < 1 || count > 10) {
-      setErrorMsg('Guest count must be between 1 and 10.');
-      return false;
-    }
 
     if (!formData.attendance) {
       setErrorMsg('Please indicate your attendance.');
@@ -62,13 +83,29 @@ export default function RSVPForm() {
     setErrorMsg('');
 
     try {
+      // Re-check capacity right before submitting (race-condition guard)
+      if (formData.attendance === 'accepted') {
+        const { data: capData, error: capError } = await supabase
+          .from('rsvps')
+          .select('guest_count')
+          .eq('attendance', 'accepted');
+
+        if (!capError && capData) {
+          const total = capData.reduce((sum, r) => sum + (parseInt(r.guest_count, 10) || 0), 0);
+          if (total >= RSVP_LIMIT) {
+            setIsFull(true);
+            setLoading(false);
+            return;
+          }
+        }
+      }
+
       const payload = {
         full_name: formData.fullName.trim(),
         email: formData.email ? formData.email.trim().toLowerCase() : null,
         phone: formData.phone ? formData.phone.trim() : null,
-        guest_count: formData.attendance === 'accepted' ? parseInt(formData.guestCount, 10) : 0,
+        guest_count: formData.attendance === 'accepted' ? 1 : 0,
         attendance: formData.attendance,
-        dietary_restrictions: formData.dietaryRestrictions.trim() || null,
         message: formData.message.trim() || null,
         status: 'pending',
       };
@@ -120,12 +157,26 @@ export default function RSVPForm() {
       fullName: '',
       email: '',
       phone: '',
-      guestCount: 1,
       attendance: 'accepted',
-      dietaryRestrictions: '',
       message: '',
     });
   };
+
+  // Show a simple skeleton while checking capacity
+  if (capacityLoading) {
+    return (
+      <section id="rsvp" className="py-20 px-4 sm:px-6 relative overflow-hidden"
+        style={{ background: 'linear-gradient(170deg, #FAF6EF 0%, #F5EBDA 100%)' }}>
+        <FloralCornerAccents />
+        <div className="max-w-2xl mx-auto relative z-10">
+          <SectionHeader scriptTitle="R.S.V.P" uppercase="Response Requested" />
+          <div className="flex justify-center items-center py-16">
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#C8A84B' }} />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="rsvp" className="py-20 px-4 sm:px-6 relative overflow-hidden"
@@ -137,8 +188,26 @@ export default function RSVPForm() {
           Your presence would mean so much to us as we celebrate this special day.
         </p>
 
-        {/* Success Confirmation View */}
-        {submitted ? (
+        {/* Capacity Reached Banner */}
+        {isFull ? (
+          <GoldBorderFrame className="rounded-3xl animate-fadeIn" innerPad={false}>
+            <div className="p-8 sm:p-14 text-center">
+              <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-6"
+                style={{ background: 'linear-gradient(135deg,#F5EBDA,#E4D0AC)', border: '1.5px solid #C8A84B' }}>
+                <Heart className="w-8 h-8" style={{ color: '#C8A84B' }} />
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-light tracking-[0.2em] uppercase mb-4 font-poppins" style={{ color: '#3D2B1A' }}>
+                Guest List Full
+              </h3>
+              <div className="py-5 px-6 rounded-2xl max-w-md mx-auto"
+                style={{ background: 'rgba(200,168,75,0.08)', border: '1px solid rgba(200,168,75,0.30)' }}>
+                <p className="text-sm font-light leading-relaxed font-poppins" style={{ color: '#6B5840' }}>
+                  Thank you for visiting our wedding invitation. We have reached our guest capacity and are not accepting additional RSVPs at this time. Thank you for understanding!&nbsp;<Heart className="inline-block w-4 h-4 align-middle" style={{ color: '#C8A84B', fill: '#C8A84B' }} />
+                </p>
+              </div>
+            </div>
+          </GoldBorderFrame>
+        ) : submitted ? (
           <GoldBorderFrame className="rounded-3xl animate-fadeIn" innerPad={false}>
             <div className="p-8 sm:p-12 text-center">
               <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-6"
@@ -280,43 +349,12 @@ export default function RSVPForm() {
                 </div>
               </div>
 
-              {/* Number of Guests (only if attending) */}
+              {/* Attendance note: each guest RSVPs individually */}
               {formData.attendance === 'accepted' && (
-                <div>
-                  <label htmlFor="guestCount" className="block text-xs font-semibold tracking-[0.2em] uppercase text-weddingBrown mb-2">
-                    Number of Guests Attending
-                  </label>
-                  <select
-                    id="guestCount"
-                    name="guestCount"
-                    value={formData.guestCount}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl bg-white/80 border border-taupe/40 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm text-weddingBrown transition-all"
-                  >
-                    {[1, 2, 3, 4, 5, 6].map((num) => (
-                      <option key={num} value={num}>
-                        {num} {num === 1 ? 'Guest (Just me)' : `Guests (Including me)`}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {/* Dietary Restrictions */}
-              {formData.attendance === 'accepted' && (
-                <div>
-                  <label htmlFor="dietaryRestrictions" className="block text-xs font-semibold tracking-[0.2em] uppercase text-weddingBrown mb-2">
-                    Dietary Restrictions <span className="text-taupe font-normal lowercase">(optional)</span>
-                  </label>
-                  <input
-                    id="dietaryRestrictions"
-                    name="dietaryRestrictions"
-                    type="text"
-                    placeholder="e.g. Vegetarian, shellfish allergy, halal"
-                    value={formData.dietaryRestrictions}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl bg-white/80 border border-taupe/40 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm text-weddingBrown placeholder:text-taupe/60 transition-all"
-                  />
+                <div className="p-3 rounded-xl text-xs font-light font-poppins flex items-start gap-2"
+                  style={{ background: 'rgba(200,168,75,0.08)', border: '1px solid rgba(200,168,75,0.25)', color: '#6B5840' }}>
+                  <Heart className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: '#C8A84B' }} />
+                  <span>Each guest is kindly requested to RSVP individually. Your reservation covers yourself only.</span>
                 </div>
               )}
 

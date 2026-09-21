@@ -7,9 +7,9 @@ const events = [
   { time: '3:30 PM', title: 'Ceremony Begins', desc: 'The sacred marriage rites and exchange of eternal vows.', Icon: Heart, highlight: true },
   { time: '4:10 PM', title: 'Ceremony Ends', desc: 'Pronouncement as husband and wife, followed by recessional.', Icon: Sparkles },
   { time: '4:10 PM – 5:00 PM', title: 'Portraits & Congratulations', desc: 'Family photography, congratulations, and couple sunset portraits.', Icon: Camera },
-  { time: '5:00 PM', title: 'Cocktail Hour', desc: "Guests move to the reception garden for hors d'oeuvres and signature drinks.", Icon: Wine },
+  { time: '5:00 PM', title: 'Cocktail Hour', desc: "Guests move to the reception garden for hors d'oeuvres, signature drinks, and a magical sparkler send-off celebration.", Icon: Wine },
   { time: '5:30 PM', title: 'Reception & Party Begins', desc: 'Grand entrance of the newlyweds, dinner banquet, speeches, and dances.', Icon: Sparkles, highlight: true },
-  { time: '9:00 PM', title: 'Reception Concludes', desc: 'Sparkler send-off and farewell as the celebration comes to a graceful close.', Icon: Moon },
+  { time: '9:00 PM', title: 'Reception Concludes', desc: 'A graceful farewell as the evening comes to a beautiful close.', Icon: Moon },
 ];
 
 export default function Timeline() {

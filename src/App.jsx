@@ -11,6 +11,7 @@ import DressCode from './components/wedding/DressCode';
 import Entourage from './components/wedding/Entourage';
 import RSVPForm from './components/wedding/RSVPForm';
 import Footer from './components/wedding/Footer';
+import MusicPlayer from './components/wedding/MusicPlayer';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
 import { supabase } from './lib/supabase';
@@ -161,6 +162,10 @@ export default function App() {
         <Footer onAdminClick={() => navigate('/admin/login')} />
 
       </main>
+
+      {/* Background Music Player — always visible after envelope opens */}
+      <MusicPlayer autoPlayTrigger={envelopeOpened} />
+
     </div>
   );
 }

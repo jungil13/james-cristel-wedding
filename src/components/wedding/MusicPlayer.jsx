@@ -1,162 +1,190 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
+
+const MUSIC_SRC = '/music/bgmusic.mp3';
 
 export default function MusicPlayer({ autoPlayTrigger }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioCtxRef = useRef(null);
-  const timerRef = useRef(null);
-  const isPlayingRef = useRef(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const audioRef = useRef(null);
 
-  // Soft romantic wedding arpeggio chords (Harp/Acoustic Piano simulation via Web Audio API)
-  // Notes in Hz: D4, F#4, A4, C#5, E5, D5, B4, A4, G4, F#4
-  const chords = [
-    [293.66, 369.99, 440.0, 554.37], // Dmaj7
-    [246.94, 329.63, 392.0, 493.88], // Em7
-    [220.00, 277.18, 329.63, 440.00], // A7sus
-    [293.66, 369.99, 440.0, 587.33], // Dadd9
-  ];
-
-  const playTone = (freq, time, duration = 2.5) => {
-    if (!audioCtxRef.current) return;
-    const ctx = audioCtxRef.current;
-    
-    // Main oscillator for soft bell/piano tone
-    const osc = ctx.createOscillator();
-    const oscHarmonic = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, time);
-
-    oscHarmonic.type = 'triangle';
-    oscHarmonic.frequency.setValueAtTime(freq * 2, time);
-
-    // Warm soft low-pass filter
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(1400, time);
-    filter.Q.setValueAtTime(1.5, time);
-
-    // Envelope
-    gainNode.gain.setValueAtTime(0, time);
-    gainNode.gain.linearRampToValueAtTime(0.08, time + 0.08);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, time + duration);
-
-    osc.connect(filter);
-    oscHarmonic.connect(filter);
-    filter.connect(gainNode);
-    gainNode.connect(ctx.destination);
-
-    osc.start(time);
-    oscHarmonic.start(time);
-    osc.stop(time + duration);
-    oscHarmonic.stop(time + duration);
-  };
-
-  const scheduleMelody = () => {
-    if (!audioCtxRef.current || !isPlayingRef.current) return;
-    const ctx = audioCtxRef.current;
-    const now = ctx.currentTime;
-    let noteTime = now + 0.1;
-
-    for (let c = 0; c < chords.length; c++) {
-      const chord = chords[c];
-      for (let n = 0; n < chord.length; n++) {
-        playTone(chord[n], noteTime, 3.0);
-        noteTime += 0.55;
-      }
-      noteTime += 0.4;
-    }
-
-    const loopDuration = (noteTime - now) * 1000;
-    timerRef.current = setTimeout(() => {
-      if (isPlayingRef.current) {
-        scheduleMelody();
-      }
-    }, loopDuration - 200);
-  };
-
-  const startMusic = async () => {
-    try {
-      if (!audioCtxRef.current) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtxRef.current = new AudioContext();
-      }
-
-      if (audioCtxRef.current.state === 'suspended') {
-        await audioCtxRef.current.resume();
-      }
-
-      isPlayingRef.current = true;
-      setIsPlaying(true);
-      scheduleMelody();
-    } catch (err) {
-      console.warn('Audio playback restricted:', err);
-    }
-  };
-
-  const stopMusic = () => {
-    isPlayingRef.current = false;
-    setIsPlaying(false);
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
-      audioCtxRef.current.suspend();
-    }
-  };
-
-  const toggleMusic = () => {
-    if (isPlaying) {
-      stopMusic();
-    } else {
-      startMusic();
-    }
-  };
-
-  // Trigger audio on user-initiated door opening
+  /* ── Init audio ───────────────────────────────────────── */
   useEffect(() => {
-    if (autoPlayTrigger && !isPlaying) {
-      startMusic();
-    }
-  }, [autoPlayTrigger]);
-
-  useEffect(() => {
-    return () => {
-      isPlayingRef.current = false;
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (audioCtxRef.current) audioCtxRef.current.close();
-    };
+    const audio  = new Audio(MUSIC_SRC);
+    audio.loop   = true;
+    audio.volume = 0.5;
+    audioRef.current = audio;
+    audio.addEventListener('play',  () => setIsPlaying(true));
+    audio.addEventListener('pause', () => setIsPlaying(false));
+    return () => { audio.pause(); audio.src = ''; };
   }, []);
 
+  /* ── Auto-play after envelope opens ──────────────────── */
+  useEffect(() => {
+    if (autoPlayTrigger && audioRef.current && !isPlaying) {
+      audioRef.current.play().catch(() => {});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoPlayTrigger]);
+
+  const togglePlay = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    isPlaying ? a.pause() : a.play().catch(() => {});
+  };
+
   return (
-    <div className="fixed bottom-6 right-6 z-40">
-      <button
-        onClick={toggleMusic}
-        aria-label={isPlaying ? "Mute background wedding music" : "Play background wedding music"}
-        className={`group flex items-center gap-2.5 px-4 py-2.5 rounded-full backdrop-blur-md transition-all duration-300 shadow-wedding-lg border ${
-          isPlaying 
-            ? 'bg-weddingBrown/90 text-champagne border-gold/40 hover:bg-weddingBrown' 
-            : 'bg-white/90 text-weddingBrown border-taupe/30 hover:bg-white'
-        }`}
+    <>
+      <style>{`
+        @keyframes cdSpin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes cdGlow {
+          0%, 100% { box-shadow: 0 8px 32px rgba(61,43,26,0.35), 0 0 0 1px rgba(200,168,75,0.25); }
+          50%       { box-shadow: 0 8px 40px rgba(200,168,75,0.30), 0 0 0 1px rgba(200,168,75,0.50); }
+        }
+        @keyframes noteFloat {
+          0%, 100% { transform: translateY(0) rotate(-12deg); opacity: 0.9; }
+          50%       { transform: translateY(-5px) rotate(8deg); opacity: 1; }
+        }
+        .cd-disc {
+          animation: cdSpin 5s linear infinite;
+          animation-play-state: paused;
+        }
+        .cd-disc.spinning {
+          animation-play-state: running;
+        }
+        .cd-wrap {
+          animation: cdGlow 2.5s ease-in-out infinite;
+        }
+      `}</style>
+
+      {/* Floating CD wrapper */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '28px',
+          right: '28px',
+          zIndex: 9999,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '8px',
+        }}
       >
-        <span className="relative flex h-3 w-3">
-          {isPlaying && (
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
-          )}
-          <span className={`relative inline-flex rounded-full h-3 w-3 ${isPlaying ? 'bg-gold' : 'bg-taupe/40'}`}></span>
-        </span>
-        
-        {isPlaying ? (
-          <Volume2 className="w-4 h-4 text-champagne group-hover:scale-110 transition-transform" />
-        ) : (
-          <VolumeX className="w-4 h-4 text-taupe group-hover:scale-110 transition-transform" />
-        )}
-        
-        <span className="text-xs font-medium tracking-wider uppercase font-poppins hidden sm:inline">
-          {isPlaying ? 'Wedding Melody' : 'Play Music'}
-        </span>
-      </button>
-    </div>
+        {/* Tooltip label */}
+        <div style={{
+          fontFamily: "'Poppins', sans-serif",
+          fontSize: '9px',
+          letterSpacing: '0.18em',
+          textTransform: 'uppercase',
+          color: '#C8A84B',
+          opacity: isPlaying ? 1 : 0.55,
+          transition: 'opacity 0.4s',
+          pointerEvents: 'none',
+          textShadow: '0 1px 4px rgba(0,0,0,0.25)',
+        }}>
+          {isPlaying ? '♪ Playing' : 'Tap to play'}
+        </div>
+
+        {/* CD Disc button */}
+        <button
+          onClick={togglePlay}
+          aria-label={isPlaying ? 'Pause music' : 'Play music'}
+          className={`cd-wrap`}
+          style={{
+            width: '70px',
+            height: '70px',
+            borderRadius: '50%',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            background: 'transparent',
+            position: 'relative',
+            transition: 'transform 0.2s ease',
+          }}
+          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.08)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          {/* ── Disc layers (spinning) ───────────────────── */}
+          <div
+            className={`cd-disc${isPlaying ? ' spinning' : ''}`}
+            style={{
+              width: '70px',
+              height: '70px',
+              borderRadius: '50%',
+              position: 'relative',
+              /* Vinyl conic gradient */
+              background:
+                'conic-gradient(from 0deg, #1a0e04, #3D2B1A 12%, #C8A84B 22%, #F0D060 28%, #C8A84B 34%, #2a1c0e 45%, #C8A84B 55%, #F0D060 62%, #C8A84B 68%, #1a0e04 80%, #2a1c0e 90%, #1a0e04)',
+            }}
+          >
+            {/* Middle dark ring */}
+            <div style={{
+              position: 'absolute',
+              inset: '10px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #100804 50%, #1e1308)',
+              border: '1px solid rgba(200,168,75,0.30)',
+            }} />
+
+            {/* Inner ring */}
+            <div style={{
+              position: 'absolute',
+              inset: '22px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, #0c0602 55%, #1e1308)',
+              border: '1px solid rgba(200,168,75,0.40)',
+            }} />
+
+            {/* Center hole */}
+            <div style={{
+              position: 'absolute',
+              inset: '30px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, #C8A84B 30%, #A88830)',
+              boxShadow: '0 0 6px rgba(200,168,75,0.8)',
+            }} />
+
+            {/* Glare highlight */}
+            <div style={{
+              position: 'absolute',
+              top: '8px',
+              left: '10px',
+              width: '18px',
+              height: '9px',
+              borderRadius: '50%',
+              background: 'rgba(255,255,255,0.13)',
+              transform: 'rotate(-35deg)',
+              pointerEvents: 'none',
+            }} />
+          </div>
+
+          {/* ── Static play/pause icon (always centered, never spins) ── */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '50%',
+            /* subtle darkening overlay on hover handled by scale */
+          }}>
+            {isPlaying ? (
+              /* Pause — two small bars */
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(240,226,196,0.85)">
+                <rect x="5"  y="4" width="4" height="16" rx="1.5"/>
+                <rect x="15" y="4" width="4" height="16" rx="1.5"/>
+              </svg>
+            ) : (
+              /* Play triangle */
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(240,226,196,0.85)">
+                <path d="M6 4.75C6 4.02 6.79 3.58 7.4 3.97l13 7.25a1 1 0 010 1.56l-13 7.25C6.79 20.42 6 19.98 6 19.25V4.75z"/>
+              </svg>
+            )}
+          </div>
+        </button>
+      </div>
+    </>
   );
 }
