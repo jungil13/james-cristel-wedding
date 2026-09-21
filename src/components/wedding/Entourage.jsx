@@ -4,8 +4,14 @@ import { GoldBorderFrame, GoldDivider, FloralCornerAccents, SectionHeader } from
 
 // ─── DATA ───────────────────────────────────────────────────────────────
 const principalSponsors = [
-  'Mr. & Mrs. Felix Jr. & Joanne Gerona',
-  'Mr. & Mrs. Cesar Jr. & Florita Malacura',
+  [
+    'Mr. Cesar Jr. Malacura',
+    'Mrs. Florita Malacura',
+  ],
+  [
+    'Mr. Felix Jr. Gerona',
+    'Mrs. Joanne Gerona',
+  ],
 ];
 
 const groomsmen = [
@@ -124,18 +130,22 @@ export default function Entourage() {
               </p>
 
               {/* Two-column sponsor grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto mb-6">
-                {principalSponsors.map((name) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto mb-6">
+                {principalSponsors.map((pair, idx) => (
                   <div
-                    key={name}
-                    className="py-3 px-4 rounded-xl text-xs font-medium tracking-wide uppercase font-poppins"
+                    key={idx}
+                    className="py-4 px-5 rounded-xl text-xs font-medium tracking-wide uppercase font-poppins flex flex-col items-center justify-center space-y-1.5 shadow-sm"
                     style={{
                       background: 'rgba(250,246,239,0.85)',
                       border: '1px solid rgba(200,168,75,0.4)',
                       color: '#3D2B1A',
                     }}
                   >
-                    {name}
+                    {pair.map((person) => (
+                      <p key={person} className="leading-snug">
+                        {person}
+                      </p>
+                    ))}
                   </div>
                 ))}
               </div>
