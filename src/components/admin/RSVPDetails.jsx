@@ -98,13 +98,7 @@ export default function RSVPDetails({ rsvp, onClose, onUpdateStatus }) {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 text-weddingBrown">
-            <Utensils className="w-4 h-4 text-gold mt-0.5 flex-shrink-0" />
-            <div>
-              <span className="text-[10px] uppercase tracking-wider text-taupe-dark font-medium block">Dietary Restrictions</span>
-              <span className="font-light">{rsvp.dietary_restrictions || 'No special dietary requirements stated.'}</span>
-            </div>
-          </div>
+
 
           <div className="flex items-start gap-3 text-weddingBrown">
             <MessageSquare className="w-4 h-4 text-gold mt-0.5 flex-shrink-0" />
