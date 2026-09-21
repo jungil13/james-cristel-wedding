@@ -17,7 +17,6 @@ const principalSponsors = [
 const groomsmen = [
   'Jake Inoc',
   'Jayson Inoc',
-  'Ivan Echavia',
   'Edeson Malacura',
   'Kent Brylle Ybañez',
   'Mike Espejo',
@@ -184,8 +183,8 @@ export default function Entourage() {
               {/* Little Attendants */}
               <div className="grid grid-cols-2 gap-4 max-w-xs mx-auto mt-6">
                 {[
-                  { role: 'Ring Bearer', name: 'Mchruls Malacura' },
-                  { role: 'Little Bride', name: 'Ruchen Malacura' },
+                  { role: 'Ring Bearer', name: 'Ruel Malacura Jr.' },
+                  { role: 'Little Bridesmaid', name: 'Ma. Ruchen Malacura' },
                 ].map(({ role, name }) => (
                   <div key={role} className="text-center">
                     <p className="text-[9px] tracking-[0.25em] uppercase font-medium font-poppins mb-1" style={{ color: '#A8927A' }}>

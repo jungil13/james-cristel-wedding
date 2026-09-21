@@ -193,7 +193,7 @@ export default function DressCode() {
               A Note on Gifts
             </h4>
             <p className="text-xs sm:text-sm font-light leading-relaxed font-poppins" style={{ color: '#6B5840' }}>
-              Your presence on our wedding is enough. However, if you wish to honor us with a gift, a monetary blessing toward our new journey together will be greatly appreciated.
+              Your presence, prayers, and laughter together are the greatest gifts we could ever ask for. No monetary gifts are needed — just come, celebrate, and share in our joy as we begin our journey together. We can't wait to laugh and make beautiful memories with you.
             </p>
           </div>
         </GoldBorderFrame>

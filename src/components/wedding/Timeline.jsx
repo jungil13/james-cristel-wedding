@@ -4,7 +4,7 @@ import { GoldDivider, FloralCornerAccents, SectionHeader } from './GoldBorder';
 
 const events = [
   { time: '2:45 PM – 3:15 PM', title: 'Guest Arrival & Seating', desc: 'Welcome refreshments and pre-ceremony seating as guests gather.', Icon: Users },
-  { time: '3:30 PM', title: 'Ceremony Begins', desc: 'The sacred marriage rites and exchange of eternal vows.', Icon: Heart, highlight: true },
+  { time: '3:30 PM', title: 'Ceremony Begins', desc: 'The sacred marriage rites and Worship to God.', Icon: Heart, highlight: true },
   { time: '4:10 PM', title: 'Ceremony Ends', desc: 'Pronouncement as husband and wife, followed by recessional.', Icon: Sparkles },
   { time: '4:10 PM – 5:00 PM', title: 'Portraits & Congratulations', desc: 'Family photography, congratulations, and couple sunset portraits.', Icon: Camera },
   { time: '5:00 PM', title: 'Cocktail Hour', desc: "Guests move to the reception garden for hors d'oeuvres, signature drinks, and a magical sparkler send-off celebration.", Icon: Wine },

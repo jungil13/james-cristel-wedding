@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Mail, ArrowLeft, Loader2, AlertCircle, Sparkles, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, ArrowLeft, Loader2, AlertCircle, ShieldCheck } from 'lucide-react';
 import { supabase, isConfigured } from '../../lib/supabase';
 
 export default function AdminLogin({ onLoginSuccess, onBackToInvitation }) {
@@ -57,18 +57,13 @@ export default function AdminLogin({ onLoginSuccess, onBackToInvitation }) {
         return;
       }
 
-      setErrorMsg('Invalid login credentials. Use organizer password: Love2027!');
+      setErrorMsg('Invalid login credentials. Please check your email and password.');
     } catch (err) {
       console.error('Login error:', err);
       setErrorMsg(err.message || 'Invalid email or password. Please try again.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleUseDemoCredentials = () => {
-    setEmail('admin@jamescristel.wedding');
-    setPassword('Love2027!');
   };
 
   return (
@@ -173,21 +168,6 @@ export default function AdminLogin({ onLoginSuccess, onBackToInvitation }) {
             </button>
 
           </form>
-
-          {/* Quick Demo Credentials Helper */}
-          <div className="mt-6 pt-5 border-t border-champagne/60 text-center">
-            <p className="text-[11px] text-taupe-dark mb-2">
-              Preview Mode Demo Admin Access:
-            </p>
-            <button
-              type="button"
-              onClick={handleUseDemoCredentials}
-              className="px-3 py-1.5 rounded-lg bg-champagne/30 hover:bg-champagne/50 text-[11px] font-medium text-weddingBrown tracking-wider border border-gold/30 transition-colors inline-flex items-center gap-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-gold" />
-              <span>Fill Demo Credentials (Love2027!)</span>
-            </button>
-          </div>
 
         </div>
 
