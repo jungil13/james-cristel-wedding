@@ -4,8 +4,8 @@ import { GoldBorderFrame, GoldDivider, FloralCornerAccents, SectionHeader } from
 
 // ─── DATA ───────────────────────────────────────────────────────────────
 const principalSponsors = [
-  'Felix Jr. & Joanne Gerona',
-  'Cesar Jr. & Lotlot Malacura',
+  'Mr. & Mrs. Felix Jr. & Joanne Gerona',
+  'Mr. & Mrs. Cesar Jr. & Florita Malacura',
 ];
 
 const groomsmen = [
@@ -78,8 +78,8 @@ export default function Entourage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {[
-              { label: 'Parents of the Groom', names: ['Terry Haigler', '&', 'Debra Hanson'] },
-              { label: 'Parents of the Bride',  names: ['Paulito Inoc', '&', 'Nila Inoc'] },
+              { label: 'Parents of the Groom', names: ['Mr. Terry Haigler', '&', 'Mrs. Debra Hanson'] },
+              { label: 'Parents of the Bride',  names: ['Mr. Paulito Inoc', '&', 'Mrs. Nila Inoc'] },
             ].map(({ label, names }) => (
               <GoldBorderFrame key={label} className="rounded-2xl text-center" innerPad={false}
                 data-aos="fade-right" data-aos-delay={100}>
