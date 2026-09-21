@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Heart, CheckCircle2, AlertCircle, Loader2, Send } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { sendRsvpNotification } from '../../lib/notifications';
 import { GoldBorderFrame, GoldDivider, FloralCornerAccents, SectionHeader } from './GoldBorder';
 
 const RSVP_LIMIT = 100;
@@ -115,6 +116,11 @@ export default function RSVPForm() {
       if (error) {
         throw error;
       }
+
+      // Dispatch instant email notification to jamesandcristel@gmail.com
+      sendRsvpNotification(payload).catch((notifErr) => {
+        console.warn('Notification dispatch error (non-blocking):', notifErr);
+      });
 
       // Also cache locally on this browser as a reliable instant backup
       try {

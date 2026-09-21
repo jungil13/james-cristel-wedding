@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, RefreshCw, Database, CheckCircle, AlertCircle, ExternalLink, ShieldCheck, Copy, CheckCheck, AlertTriangle, X, Sparkles } from 'lucide-react';
+import { Menu, RefreshCw, Database, CheckCircle, AlertCircle, ExternalLink, ShieldCheck, Copy, CheckCheck, AlertTriangle, X, Sparkles, Mail } from 'lucide-react';
 import { supabase, isConfigured } from '../../lib/supabase';
+import { sendRsvpNotification } from '../../lib/notifications';
 import AdminSidebar from './AdminSidebar';
 import DashboardStats from './DashboardStats';
 import RSVPTable from './RSVPTable';
@@ -19,10 +20,35 @@ export default function AdminDashboard({ onLogout, onReturnHome }) {
   const [copiedSql, setCopiedSql] = useState(false);
   const [usingLocalFallback, setUsingLocalFallback] = useState(false);
   const [supabaseEmptyDetected, setSupabaseEmptyDetected] = useState(false);
+  const [sendingTestEmail, setSendingTestEmail] = useState(false);
 
   const showToast = (msg) => {
     setToastMsg(msg);
-    setTimeout(() => setToastMsg(''), 3500);
+    setTimeout(() => setToastMsg(''), 4500);
+  };
+
+  const handleSendTestEmail = async () => {
+    setSendingTestEmail(true);
+    showToast('Sending test notification to jamesandcristel@gmail.com...');
+    try {
+      const res = await sendRsvpNotification({
+        full_name: 'Test Guest (System Test)',
+        email: 'jamesandcristel@gmail.com',
+        phone: '+63 900 000 0000',
+        attendance: 'accepted',
+        guest_count: 1,
+        message: 'This is a test notification to verify email alerts for James & Cristel.',
+      });
+      if (res.success) {
+        showToast('✅ Test sent to jamesandcristel@gmail.com! Please check your inbox.');
+      } else {
+        showToast('⚠️ Notice: ' + (res.message || 'Check email service'));
+      }
+    } catch (err) {
+      showToast('❌ Error: ' + err.message);
+    } finally {
+      setSendingTestEmail(false);
+    }
   };
 
   // Fetch RSVPs from Supabase
@@ -236,13 +262,25 @@ export default function AdminDashboard({ onLogout, onReturnHome }) {
               </p>
             </div>
 
-            <button
-              onClick={() => setShowRlsModal(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-champagne/40 hover:bg-champagne/60 text-weddingBrown text-xs font-medium tracking-wider border border-gold/40 transition-colors self-start sm:self-auto"
-            >
-              <Database className="w-3.5 h-3.5 text-gold" />
-              <span>Supabase SQL &amp; Permissions</span>
-            </button>
+            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+              <button
+                onClick={handleSendTestEmail}
+                disabled={sendingTestEmail}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-champagne/40 hover:bg-champagne/60 text-weddingBrown text-xs font-medium tracking-wider border border-gold/40 transition-colors disabled:opacity-50"
+                title="Send a test notification to jamesandcristel@gmail.com"
+              >
+                <Mail className={`w-3.5 h-3.5 text-gold ${sendingTestEmail ? 'animate-bounce' : ''}`} />
+                <span>{sendingTestEmail ? 'Sending...' : 'Test Email Alert'}</span>
+              </button>
+
+              <button
+                onClick={() => setShowRlsModal(true)}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-champagne/40 hover:bg-champagne/60 text-weddingBrown text-xs font-medium tracking-wider border border-gold/40 transition-colors"
+              >
+                <Database className="w-3.5 h-3.5 text-gold" />
+                <span>Supabase SQL &amp; Permissions</span>
+              </button>
+            </div>
           </div>
 
 
