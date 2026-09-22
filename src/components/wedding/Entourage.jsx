@@ -12,6 +12,10 @@ const principalSponsors = [
     'Mr. Felix Jr. Gerona',
     'Mrs. Joanne Gerona',
   ],
+  [
+    'Mr. Sofonias Malacura',
+    'Mrs. Valisity LaMettery',
+  ],
 ];
 
 const groomsmen = [
@@ -133,7 +137,11 @@ export default function Entourage() {
                 {principalSponsors.map((pair, idx) => (
                   <div
                     key={idx}
-                    className="py-4 px-5 rounded-xl text-xs font-medium tracking-wide uppercase font-poppins flex flex-col items-center justify-center space-y-1.5 shadow-sm"
+                    className={`py-4 px-5 rounded-xl text-xs sm:text-sm font-medium tracking-wide font-poppins flex flex-col items-center justify-center space-y-1.5 shadow-sm ${
+                      principalSponsors.length % 2 !== 0 && idx === principalSponsors.length - 1
+                        ? 'sm:col-span-2 sm:max-w-[280px] sm:mx-auto w-full'
+                        : ''
+                    }`}
                     style={{
                       background: 'rgba(250,246,239,0.85)',
                       border: '1px solid rgba(200,168,75,0.4)',
