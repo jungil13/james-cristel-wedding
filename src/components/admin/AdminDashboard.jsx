@@ -305,7 +305,7 @@ export default function AdminDashboard({ onLogout, onReturnHome }) {
                 </div>
 
                 <RSVPTable
-                  rsvps={rsvps.slice(0, 5)}
+                  rsvps={rsvps}
                   onViewRsvp={(rsvp) => setSelectedRsvp(rsvp)}
                   onUpdateStatus={handleUpdateStatus}
                   onDeleteRsvp={handleDeleteRsvp}
